@@ -85,19 +85,21 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
 }
 .nav-inner{
   display:flex;align-items:center;justify-content:space-between;
-  /* Liquid glass — works in both light + dark */
-  background:rgba(120,120,128,0.18);
-  backdrop-filter:blur(28px) saturate(200%) brightness(1.08);
-  -webkit-backdrop-filter:blur(28px) saturate(200%) brightness(1.08);
-  border:1px solid rgba(255,255,255,0.22);
-  border-bottom-color:rgba(255,255,255,0.10);
+  /* Deep liquid glass — Apple-style, enhanced for dark mode */
+  background:rgba(18,18,22,0.55);
+  backdrop-filter:blur(40px) saturate(180%) brightness(1.12);
+  -webkit-backdrop-filter:blur(40px) saturate(180%) brightness(1.12);
+  border:1px solid rgba(255,255,255,0.14);
+  border-bottom-color:rgba(255,255,255,0.06);
+  border-top-color:rgba(255,255,255,0.22);
   border-radius:100px;
   padding:.72rem 1rem .72rem 1.5rem;
   box-shadow:
-    0 8px 32px rgba(0,0,0,.18),
-    0 2px 8px rgba(0,0,0,.10),
-    inset 0 1px 0 rgba(255,255,255,0.28),
-    inset 0 -1px 0 rgba(0,0,0,0.08);
+    0 8px 40px rgba(0,0,0,.42),
+    0 2px 12px rgba(0,0,0,.22),
+    inset 0 1.5px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    inset 0 0 0 0.5px rgba(255,255,255,0.06);
   transition:background .4s ease, box-shadow .4s ease;
 }
 /* Slightly lighter tint in light mode */
@@ -111,24 +113,41 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
     inset 0 1px 0 rgba(255,255,255,0.70),
     inset 0 -1px 0 rgba(0,0,0,0.04);
 }
-.nav-logo{
-  display:flex;align-items:center;justify-content:center;
-  width:34px;height:34px;background:var(--accent);border-radius:50%;
-  font-family:var(--font-d);font-size:.75rem;font-weight:800;
-  color:#0a0a0a;text-decoration:none;letter-spacing:.04em;flex-shrink:0;
-  transition:background .4s, transform .25s var(--ease);
-  box-shadow:0 2px 10px rgba(0,0,0,.25);
+.nav-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  background: var(--accent) !important;
+  border-radius: 50%;
+  font-family: var(--font-d), sans-serif;
+  font-size: 14px !important;
+  font-weight: 800;
+  color: #0a0a0a !important;
+  text-decoration: none;
+  letter-spacing: 0;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
+  line-height: normal !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.nav-logo:hover {
+  transform: scale(1.1);
 }
 .nav-logo:hover{transform:scale(1.1);}
 .nav-links{display:flex;gap:.25rem;list-style:none;}
 .nav-links a{
-  /* Always visible: semi-opaque in dark, dark text in light */
   color:rgba(255,255,255,.82);
   text-shadow:0 1px 3px rgba(0,0,0,.35);
   text-decoration:none;font-size:.82rem;
   font-weight:500;letter-spacing:.04em;
   padding:.42rem 1rem;border-radius:100px;
   transition:color .2s,background .2s;
+  /* rotation hover scaffolding */
+  position:relative;overflow:hidden;perspective:500px;
+  display:inline-flex;align-items:center;
 }
 [data-theme="light"] .nav-links a{
   color:rgba(20,20,30,.82);
@@ -143,6 +162,23 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
   color:rgba(10,10,20,1);
   background:rgba(0,0,0,.08);
 }
+/* nav link rotation faces */
+.nav-links a .nl-face{
+  display:block;white-space:nowrap;
+  transition:transform .38s var(--ease),opacity .28s ease;
+  transform-origin:50% 100%;backface-visibility:hidden;
+}
+.nav-links a .nl-back{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  transform:rotateX(-90deg) translateZ(1.4em);
+  opacity:0;color:var(--accent);
+  transition:transform .38s var(--ease),opacity .28s ease;
+  transform-origin:50% 100%;backface-visibility:hidden;
+  font-weight:700;white-space:nowrap;
+}
+.nav-links a:hover .nl-face{transform:rotateX(90deg) translateZ(1.4em);opacity:0;}
+.nav-links a:hover .nl-back{transform:rotateX(0) translateZ(0);opacity:1;}
 .nav-cta{
   display:inline-flex;align-items:center;justify-content:center;
   /* Rotation effect: needs perspective + overflow:hidden */
@@ -233,12 +269,12 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
 .btn-ghost:hover .rback{transform:rotateX(0deg) translateZ(0);opacity:1;}
 
 /* ══════════════════════════════════
-   TEXT MASK ANIMATION
-   (text-mask-anim.learnframer.site)
-   Words/lines are clipped inside a
-   mask-box and revealed on scroll.
-   Each word has overflow:hidden wrapper.
+   GEN Z TEXT ANIMATION SYSTEM
+   — char scramble, glitch, kinetic,
+     chromatic, magnetic, split reveals
 ══════════════════════════════════ */
+
+/* ── LINE MASK (base, kept for compat) ── */
 .tma-word{display:inline-block;overflow:hidden;vertical-align:bottom;}
 .tma-word .tma-inner{
   display:inline-block;
@@ -246,13 +282,8 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
   opacity:0;
   transition:transform .75s var(--ease),opacity .5s ease;
 }
-.tma-word.revealed .tma-inner{
-  transform:translateY(0);
-  opacity:1;
-}
-/* stagger: set by JS inline style */
+.tma-word.revealed .tma-inner{transform:translateY(0);opacity:1;}
 
-/* Line-by-line mask: whole line clips open */
 .tma-line{display:block;overflow:hidden;line-height:1.05;}
 .tma-line .tma-linner{
   display:block;
@@ -263,6 +294,210 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
 .tma-block .tma-line:nth-child(1) .tma-linner{transition-delay:.04s;}
 .tma-block .tma-line:nth-child(2) .tma-linner{transition-delay:.14s;}
 .tma-block .tma-line:nth-child(3) .tma-linner{transition-delay:.24s;}
+
+/* ── SCRAMBLE CHARS ── */
+.scramble-char{
+  display:inline-block;
+  opacity:0;
+  transition:opacity .05s ease;
+}
+.scramble-char.visible{opacity:1;}
+
+/* ── SPLIT CHARACTER REVEAL ── */
+.split-chars-wrap{display:inline-block;overflow:hidden;}
+.split-char{
+  display:inline-block;
+  transform:translateY(110%) rotate(8deg);
+  opacity:0;
+  transition:transform .7s var(--ease), opacity .5s ease;
+  will-change:transform;
+}
+.split-char.space{display:inline-block;width:.28em;}
+.split-chars-wrap.revealed .split-char{
+  transform:translateY(0) rotate(0deg);
+  opacity:1;
+}
+
+/* ── GLITCH TEXT ── */
+.glitch-text{
+  position:relative;
+  display:inline-block;
+}
+.glitch-text::before,
+.glitch-text::after{
+  content:attr(data-text);
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+}
+.glitch-text.glitching::before{
+  color:var(--accent2);
+  clip-path:polygon(0 30%,100% 30%,100% 50%,0 50%);
+  animation:glitchA .12s steps(1) forwards;
+}
+.glitch-text.glitching::after{
+  color:var(--accent3);
+  clip-path:polygon(0 60%,100% 60%,100% 75%,0 75%);
+  animation:glitchB .12s steps(1) .04s forwards;
+}
+@keyframes glitchA{
+  0%{opacity:1;transform:translate(-3px,1px);}
+  33%{transform:translate(2px,-1px);}
+  66%{transform:translate(-1px,2px);}
+  100%{opacity:0;transform:translate(0,0);}
+}
+@keyframes glitchB{
+  0%{opacity:1;transform:translate(3px,-1px);}
+  33%{transform:translate(-2px,1px);}
+  66%{transform:translate(1px,-2px);}
+  100%{opacity:0;transform:translate(0,0);}
+}
+
+/* ── KINETIC / BLUR-IN ── */
+.kinetic-word{
+  display:inline-block;
+  opacity:0;
+  filter:blur(12px);
+  transform:translateY(20px) skewX(-6deg);
+  transition:
+    opacity .65s var(--ease),
+    filter .65s var(--ease),
+    transform .65s var(--ease);
+  will-change:transform,filter;
+}
+.kinetic-word.revealed{
+  opacity:1;
+  filter:blur(0);
+  transform:translateY(0) skewX(0);
+}
+
+/* ── CHROMATIC ABERRATION REVEAL ── */
+@keyframes chromeIn{
+  0%{text-shadow:
+    -8px 0 0 rgba(255,0,80,.8),
+    8px 0 0 rgba(0,255,200,.8);
+    opacity:0;filter:blur(4px);}
+  40%{text-shadow:
+    -3px 0 0 rgba(255,0,80,.4),
+    3px 0 0 rgba(0,255,200,.4);
+    opacity:1;filter:blur(1px);}
+  100%{text-shadow:none;opacity:1;filter:blur(0);}
+}
+.chromatic-reveal{
+  opacity:0;
+}
+.chromatic-reveal.revealed{
+  animation:chromeIn .9s var(--ease) forwards;
+}
+
+/* ── STAGGER LETTER FLOAT ── */
+@keyframes letterFloat{
+  0%{opacity:0;transform:translateY(40px) scale(.8);}
+  60%{transform:translateY(-6px) scale(1.04);}
+  100%{opacity:1;transform:translateY(0) scale(1);}
+}
+.letter-float-char{
+  display:inline-block;
+  opacity:0;
+  will-change:transform;
+}
+.letter-float-char.space{display:inline-block;width:.28em;}
+.letter-float-char.revealed{
+  animation:letterFloat .6s var(--ease) forwards;
+}
+
+/* ── NOISE / STATIC REVEAL ── */
+@keyframes staticReveal{
+  0%{opacity:0;clip-path:inset(80% 0 0 0);filter:contrast(3) brightness(2);}
+  30%{clip-path:inset(50% 0 0 0);filter:contrast(2) brightness(1.5);}
+  60%{clip-path:inset(10% 0 0 0);filter:contrast(1.2) brightness(1.1);}
+  100%{opacity:1;clip-path:inset(0% 0 0 0);filter:none;}
+}
+.static-reveal{
+  opacity:0;
+  will-change:clip-path;
+}
+.static-reveal.revealed{
+  animation:staticReveal .75s var(--ease) forwards;
+}
+
+/* ── TYPEWRITER CURSOR ── */
+.typewriter-wrap{
+  display:inline-block;
+  position:relative;
+}
+.typewriter-cursor{
+  display:inline-block;
+  width:2px;
+  height:1em;
+  background:var(--accent);
+  margin-left:2px;
+  vertical-align:middle;
+  animation:blink .8s step-end infinite;
+}
+@keyframes blink{50%{opacity:0;}}
+
+/* ── MAGNETIC HOVER (applies to sections labels) ── */
+.mag-hover{
+  display:inline-block;
+  transition:transform .35s var(--ease);
+  will-change:transform;
+}
+
+/* ── WORD STAMP ── */
+@keyframes wordStamp{
+  0%{opacity:0;transform:scale(1.6) rotate(-4deg);filter:blur(6px);}
+  60%{transform:scale(.95) rotate(.5deg);}
+  100%{opacity:1;transform:scale(1) rotate(0deg);filter:blur(0);}
+}
+.stamp-word{
+  display:inline-block;
+  opacity:0;
+}
+.stamp-word.revealed{
+  animation:wordStamp .55s var(--ease) forwards;
+}
+
+/* ── SCAN LINE REVEAL ── */
+@keyframes scanReveal{
+  0%{clip-path:inset(0 100% 0 0);}
+  100%{clip-path:inset(0 0% 0 0);}
+}
+.scan-reveal{
+  opacity:0;
+  display:inline-block;
+}
+.scan-reveal.revealed{
+  opacity:1;
+  animation:scanReveal .9s var(--ease) forwards;
+}
+
+/* ── SECTION TITLE UPGRADE ── */
+.sec-title .char-wrap{display:inline-block;overflow:hidden;vertical-align:bottom;}
+.sec-title .char-inner{display:inline-block;transform:translateY(110%);transition:transform .7s var(--ease);}
+.sec-title.chars-revealed .char-inner{transform:translateY(0);}
+
+/* ── HOVER SCRAMBLE on nav links ── */
+.nav-links a{position:relative;}
+.nav-links a .nav-txt{display:block;}
+
+/* ── ACCENT HIGHLIGHT ANIMATE ── */
+@keyframes highlightSweep{
+  from{background-size:0% 100%;}
+  to{background-size:100% 100%;}
+}
+.highlight-sweep{
+  background-image:linear-gradient(transparent 60%, rgba(200,255,26,.3) 60%);
+  background-repeat:no-repeat;
+  background-size:0% 100%;
+}
+[data-theme="light"] .highlight-sweep{
+  background-image:linear-gradient(transparent 60%, rgba(26,107,255,.2) 60%);
+}
+.highlight-sweep.revealed{
+  animation:highlightSweep .8s var(--ease) .3s forwards;
+}
 
 /* ══════════════════════════════════
    REVEAL SYSTEM
@@ -285,7 +520,7 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
 /* ══════════════════════════════════
    LAYOUT
 ══════════════════════════════════ */
-section{padding:7rem 3rem;}
+section{padding:5.5rem 3rem;}
 .container{max-width:1200px;margin:0 auto;}
 .sec-label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:.65rem;display:flex;align-items:center;gap:.75rem;}
 .sec-label::before{content:'';display:block;width:2rem;height:1.5px;background:var(--accent);}
@@ -299,14 +534,12 @@ section{padding:7rem 3rem;}
 #hero {
   min-height: 100vh;
   display: grid;
-  /* THE FIX: Changed from 1fr 1fr to 1fr auto */
-  /* Left column gets max space, right column shrinks to fit the image */
-  grid-template-columns: 1fr auto; 
+  grid-template-columns: 1fr 1fr;
   align-items: end;
-  gap: 3rem;
+  gap: 2rem;
   position: relative;
   overflow: hidden;
-  padding: 8rem 3rem 0;
+  padding: 7rem 3rem 0;
 }
 /* subtle noise */
 #hero::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
@@ -324,18 +557,20 @@ section{padding:7rem 3rem;}
 @keyframes fY{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
 
 /* LEFT column */
-.hero-left{position:relative;z-index:1;padding-bottom:5rem;}
+.hero-left{
+  position:relative;z-index:1;
+  padding-bottom:5rem;
+  min-width:0; /* prevent overflow from large text */
+}
 .hero-eyebrow{font-size:.76rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:1.4rem;display:flex;align-items:center;gap:.75rem;}
 .hero-eyebrow::before{content:'';display:block;width:2rem;height:1.5px;background:var(--accent);}
 
 .hero-name {
   font-family: var(--font-d);
-  /* FIXED: Lowered the 'vw' value and max-size so it scales down safely beside the large image */
   font-size: clamp(2rem, 4.2vw, 5.5rem); 
   font-weight: 800;
   line-height: .9;
   text-transform: uppercase;
-  /* Slightly tightened the spacing between letters to save a few extra pixels */
   letter-spacing: -.04em; 
   margin-bottom: 1.8rem;
   color: var(--text);
@@ -362,15 +597,6 @@ section{padding:7rem 3rem;}
 .insta-badge{display:inline-flex;align-items:center;gap:.45rem;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;padding:.55rem 1.2rem;border-radius:100px;font-size:.8rem;font-weight:600;text-decoration:none;transition:opacity .2s,transform .25s var(--ease);}
 .insta-badge:hover{opacity:.88;transform:translateY(-2px);}
 
-/* LEFT column */
-.hero-left {
-  position: relative;
-  z-index: 1;
-  padding-bottom: 5rem;
-  /* THIS IS THE MAGIC FIX: Prevents the huge text from crushing the right column */
-  min-width: 0; 
-}
-
 /* RIGHT column */
 .hero-right {
   position: relative;
@@ -378,7 +604,6 @@ section{padding:7rem 3rem;}
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  /* Push the image all the way to the right side of the screen */
   align-items: flex-end; 
   min-height: 0;
   overflow: visible; 
@@ -386,7 +611,6 @@ section{padding:7rem 3rem;}
 
 .hero-photo-frame {
   position: relative;
-  /* Force a strict, massive width so it ignores the grid crushing it */
   width: 440px; 
   max-width: 100%;
   flex-shrink: 0;
@@ -394,7 +618,6 @@ section{padding:7rem 3rem;}
 
 .hero-photo-frame img {
   width: 100%;
-  /* Your requested 9/16 ratio */
   aspect-ratio: 9 / 16; 
   object-fit: cover;
   object-position: top center;
@@ -407,7 +630,6 @@ section{padding:7rem 3rem;}
 
 .hero-photo-tag {
   position: absolute;
-  /* Moved to the left side of the frame so it overlaps beautifully */
   top: 4rem;
   left: -2.5rem;
   background: var(--accent);
@@ -423,7 +645,6 @@ section{padding:7rem 3rem;}
   z-index: 3;
   box-shadow: 0 4px 14px rgba(0,0,0,.22);
 }
-
 [data-theme="light"] .hero-photo-tag {
   color: #fff;
 }
@@ -721,13 +942,13 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
   <div class="nav-inner">
     <a href="#hero" class="nav-logo">N</a>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#approach">Approach</a></li>
-      <li><a href="#design">Design</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#about"><span class="nl-face">About</span><span class="nl-back">About</span></a></li>
+      <li><a href="#projects"><span class="nl-face">Projects</span><span class="nl-back">Work</span></a></li>
+      <li><a href="#approach"><span class="nl-face">Approach</span><span class="nl-back">Process</span></a></li>
+      <li><a href="#design"><span class="nl-face">Design</span><span class="nl-back">Gallery</span></a></li>
+      <li><a href="#contact"><span class="nl-face">Contact</span><span class="nl-back">Let's Talk</span></a></li>
     </ul>
-    <a href="https://drive.google.com/file/d/1CoEw7qY1ySEiUIF7Ed3zlMIRO_G2H6zt/view?usp=drive_link" class="nav-cta" target="_blank">
+    <a href="https://drive.google.com/file/d/1bntx1-tUSMAnkd90xOaZ2OO_fbHJ-fcU/view?usp=drive_link" class="nav-cta" target="_blank">
       <span class="rface">Download CV</span>
       <span class="rback">Get Resume ↗</span>
     </a>
@@ -743,16 +964,12 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
   <svg class="fshape" data-prlx="-0.15" style="top:20%;left:4%;opacity:.08;" width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="36" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="38" cy="38" r="24" fill="none" stroke="currentColor" stroke-width=".8"/></svg>
   <svg class="fshape" data-prlx="-0.22" style="bottom:22%;left:8%;opacity:.07;" width="50" height="50" viewBox="0 0 50 50"><polygon points="25,4 47,44 3,44" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
 
-  <!-- LEFT -->
   <div class="hero-left">
-    <!-- EYEBROW — text mask animation -->
     <p class="hero-eyebrow tma-block">
       <span class="tma-line"><span class="tma-linner">Available for work · India</span></span>
     </p>
 
-    <!-- NAME — FIXED: both words inside frame, Naidu always visible -->
     <h1 class="hero-name">
-      <!-- Word-by-word text mask animation -->
       <span class="name-solid tma-block">
         <span class="tma-line"><span class="tma-linner">Tejeswara</span></span>
       </span>
@@ -761,7 +978,6 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
       </span>
     </h1>
 
-    <!-- SUB — text mask animation word by word -->
     <p class="hero-sub" id="heroSub">
       <strong>Digital Content Associate &amp; UI/UX Designer</strong> with expertise in
       <strong>front-end development</strong>, <strong>visual design</strong>,
@@ -769,7 +985,6 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
     </p>
 
     <div class="hero-cta">
-      <!-- rotation button hover effect -->
       <a href="#projects" class="btn-rot">
         <span class="rface">View Projects ↗</span>
         <span class="rback">See Work ↗</span>
@@ -784,7 +999,6 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
       </a>
     </div>
   </div>
-
   <!-- RIGHT — photo -->
   <div class="hero-right">
     <div class="hero-photo-frame">
@@ -1062,7 +1276,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
     <a href="#about" class="footer-link">About</a>
     <a href="#projects" class="footer-link">Projects</a>
     <a href="https://www.instagram.com/pozters.in/" class="footer-link" target="_blank">@pozters.in</a>
-    <a href="https://drive.google.com/file/d/1CoEw7qY1ySEiUIF7Ed3zlMIRO_G2H6zt/view?usp=drive_link" class="footer-link" target="_blank">Resume</a>
+    <a href="https://drive.google.com/file/d/1bntx1-tUSMAnkd90xOaZ2OO_fbHJ-fcU/view?usp=drive_link" class="footer-link" target="_blank">Resume</a>
   </div>
 </footer>
 
@@ -1109,11 +1323,257 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
 })();
 
 /* ══════════════════════════════════════════
-   TEXT MASK ANIMATION
-   (text-mask-anim.learnframer.site)
-   Each .tma-block gets its lines unmasked
-   when it enters viewport. Hero fires on load.
+   ██████  GEN Z ANIMATION ENGINE  ██████
 ══════════════════════════════════════════ */
+
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*!?';
+const ease = 'cubic-bezier(0.16,1,0.3,1)';
+
+/* ── 1. CHAR SCRAMBLE ──────────────────── */
+function scrambleText(el, finalText, duration=900, delay=0){
+  let frame=0;
+  const totalFrames = Math.floor(duration/40);
+  const len = finalText.length;
+  setTimeout(()=>{
+    const iv = setInterval(()=>{
+      let out='';
+      for(let i=0;i<len;i++){
+        if(finalText[i]===' '){out+=' ';continue;}
+        const progress = frame/totalFrames;
+        const revealAt = i/len;
+        if(progress > revealAt + 0.15){
+          out += `<span class="scramble-char visible">${finalText[i]}</span>`;
+        } else {
+          const randChar = CHARS[Math.floor(Math.random()*CHARS.length)];
+          out += `<span class="scramble-char visible" style="color:var(--accent);opacity:.5">${randChar}</span>`;
+        }
+      }
+      el.innerHTML = out;
+      frame++;
+      if(frame>=totalFrames){
+        clearInterval(iv);
+        el.textContent = finalText;
+      }
+    },40);
+  },delay);
+}
+
+/* ── 2. SPLIT CHARACTER REVEAL ─────────── */
+function splitCharsReveal(el, staggerMs=40, delayMs=0){
+  const text = el.textContent;
+  el.innerHTML='';
+  const wrap = document.createElement('span');
+  wrap.className='split-chars-wrap';
+  [...text].forEach((ch,i)=>{
+    const s=document.createElement('span');
+    s.className = ch===' ' ? 'split-char space' : 'split-char';
+    s.textContent = ch===' ' ? '\u00a0' : ch;
+    s.style.transitionDelay = (delayMs + i*staggerMs)+'ms';
+    wrap.appendChild(s);
+  });
+  el.appendChild(wrap);
+  // trigger
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    wrap.classList.add('revealed');
+  }));
+}
+
+/* ── 3. KINETIC BLUR WORDS ─────────────── */
+function kineticWords(el, staggerMs=80, delayMs=0){
+  const words = el.innerHTML.split(/(\s+)/);
+  el.innerHTML = words.map((w,i)=>{
+    if(/^\s+$/.test(w)) return ' ';
+    const delay = delayMs + Math.floor(i/2)*staggerMs;
+    return `<span class="kinetic-word" style="transition-delay:${delay}ms">${w}</span>`;
+  }).join('');
+}
+
+/* ── 4. GLITCH TRIGGER ─────────────────── */
+function triggerGlitch(el){
+  el.classList.remove('glitching');
+  void el.offsetWidth;
+  el.classList.add('glitching');
+  setTimeout(()=>el.classList.remove('glitching'),200);
+}
+
+function setupGlitch(el){
+  el.setAttribute('data-text', el.textContent);
+  el.classList.add('glitch-text');
+  // random glitch on scroll reveal
+  return el;
+}
+
+/* ── 5. LETTER FLOAT ───────────────────── */
+function letterFloat(el, staggerMs=55, delayMs=0){
+  const text = el.textContent;
+  el.innerHTML='';
+  [...text].forEach((ch,i)=>{
+    const s=document.createElement('span');
+    s.className = ch===' ' ? 'letter-float-char space' : 'letter-float-char';
+    s.textContent = ch===' ' ? '\u00a0' : ch;
+    el.appendChild(s);
+  });
+  setTimeout(()=>{
+    const chars = el.querySelectorAll('.letter-float-char');
+    chars.forEach((c,i)=>{
+      c.style.animationDelay=(i*staggerMs)+'ms';
+      c.classList.add('revealed');
+    });
+  }, delayMs);
+}
+
+/* ── 6. TYPEWRITER ─────────────────────── */
+function typewriter(el, speed=60, delay=0){
+  const text = el.textContent;
+  el.innerHTML = '<span class="typewriter-cursor"></span>';
+  const cursor = el.querySelector('.typewriter-cursor');
+  let i=0;
+  setTimeout(()=>{
+    const iv = setInterval(()=>{
+      if(i>=text.length){clearInterval(iv);return;}
+      const span = document.createElement('span');
+      span.textContent = text[i];
+      el.insertBefore(span,cursor);
+      i++;
+    }, speed);
+  }, delay);
+}
+
+/* ── 7. MAGNETIC HOVER ─────────────────── */
+function magneticHover(el, strength=0.35){
+  el.classList.add('mag-hover');
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    const dx=(e.clientX-(r.left+r.width/2))*strength;
+    const dy=(e.clientY-(r.top+r.height/2))*strength;
+    el.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+  el.addEventListener('mouseleave',()=>{
+    el.style.transform='';
+  });
+}
+
+/* ── 8. WORD STAMP ─────────────────────── */
+function wordStamp(el, staggerMs=90, delayMs=0){
+  const words = el.textContent.split(/\s+/);
+  el.innerHTML = words.map((w,i)=>`<span class="stamp-word" style="animation-delay:${delayMs+i*staggerMs}ms">${w}</span>`).join(' ');
+}
+
+/* ── 9. HIGHLIGHT SWEEP ────────────────── */
+function highlightSweep(el){
+  el.classList.add('highlight-sweep');
+}
+
+/* ══════════════════════════════════════════
+   APPLY GEN Z ANIMATIONS TO ELEMENTS
+══════════════════════════════════════════ */
+
+/* ── HERO NAME — Split char with stagger ── */
+(function heroName(){
+  const solid = document.querySelector('.hero-name .name-solid .tma-linner');
+  const outline = document.querySelector('.hero-name .name-outline .tma-linner');
+  if(solid){
+    const txt=solid.textContent;
+    solid.innerHTML='';
+    [...txt].forEach((ch,i)=>{
+      const s=document.createElement('span');
+      s.className='letter-float-char'+(ch===' '?' space':'');
+      s.textContent=ch===' '?'\u00a0':ch;
+      s.style.animationDelay=(180+i*70)+'ms'; /* natural stagger */
+      solid.appendChild(s);
+    });
+    setTimeout(()=>solid.querySelectorAll('.letter-float-char').forEach(c=>c.classList.add('revealed')),200);
+  }
+  if(outline){
+    const txt2=outline.textContent;
+    outline.innerHTML='';
+    [...txt2].forEach((ch,i)=>{
+      const s=document.createElement('span');
+      s.className='letter-float-char'+(ch===' '?' space':'');
+      s.textContent=ch===' '?'\u00a0':ch;
+      s.style.animationDelay=(500+i*70)+'ms'; /* delayed after first name */
+      s.style.color='inherit';
+      outline.appendChild(s);
+    });
+    setTimeout(()=>outline.querySelectorAll('.letter-float-char').forEach(c=>c.classList.add('revealed')),150);
+  }
+})();
+
+/* ── HERO EYEBROW — scramble on load ── */
+(function heroEyebrow(){
+  const el = document.querySelector('.hero-eyebrow .tma-linner');
+  if(!el) return;
+  const txt = el.textContent.trim();
+  el.style.transform='translateY(0)';
+  scrambleText(el, txt, 1100, 200);
+})();
+
+/* ── HERO SUB — kinetic blur words ── */
+(function heroSub(){
+  const sub = document.getElementById('heroSub');
+  if(!sub) return;
+  const originalHTML = sub.innerHTML;
+  // parse into nodes preserving <strong>
+  const temp = document.createElement('div');
+  temp.innerHTML = originalHTML;
+  sub.innerHTML='';
+  sub.style.opacity='1';
+
+  let wordDelay=700;
+  function processNode(node, container){
+    if(node.nodeType===3){
+      node.textContent.split(/(\s+)/).forEach(part=>{
+        if(!part.trim()&&part){container.appendChild(document.createTextNode(' '));return;}
+        if(!part.trim()) return;
+        const span=document.createElement('span');
+        span.className='kinetic-word';
+        span.textContent=part;
+        span.style.transitionDelay=wordDelay+'ms';
+        wordDelay+=65;
+        container.appendChild(span);
+        container.appendChild(document.createTextNode(' '));
+      });
+    } else if(node.nodeType===1){
+      const clone=document.createElement(node.tagName);
+      node.getAttributeNames().forEach(a=>clone.setAttribute(a,node.getAttribute(a)));
+      node.childNodes.forEach(child=>processNode(child,clone));
+      container.appendChild(clone);
+    }
+  }
+  temp.childNodes.forEach(n=>processNode(n,sub));
+  setTimeout(()=>sub.querySelectorAll('.kinetic-word').forEach(w=>w.classList.add('revealed')),100);
+})();
+
+/* ── HERO PHOTO entrance ── */
+const hp=document.querySelector('.hero-photo-frame');
+if(hp){
+  hp.style.cssText+='opacity:0;transform:translateX(40px) scale(.97);transition:opacity 1.1s cubic-bezier(0.16,1,0.3,1) .3s,transform 1.1s cubic-bezier(0.16,1,0.3,1) .3s;';
+  setTimeout(()=>{hp.style.opacity='.92';hp.style.transform='none';},60);
+}
+
+/* ── HERO CTA entrance ── */
+const heroCta=document.querySelector('.hero-cta');
+if(heroCta){
+  heroCta.style.cssText+='opacity:0;transform:translateY(22px);transition:opacity .9s cubic-bezier(0.16,1,0.3,1) .82s,transform .9s cubic-bezier(0.16,1,0.3,1) .82s;';
+  setTimeout(()=>{heroCta.style.opacity='1';heroCta.style.transform='none';},40);
+}
+
+/* ── MAGNETIC on hero CTA buttons ── */
+setTimeout(()=>{
+  document.querySelectorAll('.btn-rot,.btn-ghost,.insta-badge').forEach(el=>magneticHover(el,0.28));
+  document.querySelectorAll('.nav-logo,.nav-cta').forEach(el=>magneticHover(el,0.22));
+},500);
+
+/* ══════════════════════════════════════════
+   SCROLL-TRIGGERED GEN Z ANIMATIONS
+══════════════════════════════════════════ */
+/* ── TRIGGER HERO TEXT REVEAL ON LOAD ── */
+setTimeout(() => {
+  document.querySelectorAll('#hero .tma-block').forEach(el => {
+    el.classList.add('revealed');
+  });
+}, 150);
+/* Observer for tma-blocks (existing) */
 const tmaIO=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
@@ -1122,48 +1582,208 @@ const tmaIO=new IntersectionObserver(entries=>{
     }
   });
 },{threshold:.2});
-
-// Hero tma-blocks fire immediately on load
-document.querySelectorAll('#hero .tma-block').forEach(el=>{
-  setTimeout(()=>el.classList.add('revealed'),100);
-});
-
-// All other tma-blocks via observer
 document.querySelectorAll('.tma-block:not(#hero .tma-block)').forEach(el=>tmaIO.observe(el));
 
-// Word-by-word TMA for hero subtitle
-(function buildWordMask(){
-  const sub=document.getElementById('heroSub');
-  if(!sub)return;
-  const html2=sub.innerHTML;
-  // wrap each word (preserving HTML tags)
-  // Simple approach: wrap text nodes word by word
-  function wrapWords(node){
-    if(node.nodeType===3){
-      const words=node.textContent.split(/(\s+)/);
+/* ── SECTION TITLES — scramble on scroll ── */
+const secTitleIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el = e.target;
+    // grab all tma-linner within this sec-title
+    el.querySelectorAll('.tma-linner').forEach((line,li)=>{
+      const txt = line.textContent;
+      // scramble each line with delay
+      setTimeout(()=>scrambleText(line, txt, 850, 0), li*180);
+    });
+    // also do split-char for clean final state after scramble
+    secTitleIO.unobserve(el);
+  });
+},{threshold:.3});
+document.querySelectorAll('.sec-title.tma-block').forEach(el=>secTitleIO.observe(el));
+
+/* ── SECTION LABELS — chromatic reveal ── */
+const labelIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('chromatic-reveal','revealed');
+    labelIO.unobserve(e.target);
+  });
+},{threshold:.5});
+document.querySelectorAll('.sec-label').forEach(el=>{
+  el.classList.add('chromatic-reveal');
+  labelIO.observe(el);
+});
+
+/* ── ABOUT TEXT — kinetic blur words on scroll ── */
+const aboutIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    // wrap words
+    e.target.querySelectorAll('p').forEach((p,pi)=>{
+      // Only process text nodes (not already wrapped)
+      if(p.querySelector('.kinetic-word')) return;
+      const words=[...p.childNodes];
       const frag=document.createDocumentFragment();
-      words.forEach((w,i)=>{
-        if(/^\s+$/.test(w)){frag.appendChild(document.createTextNode(w));}
-        else if(w){
-          const span=document.createElement('span');
-          span.className='tma-word';
-          span.innerHTML=`<span class="tma-inner">${w}</span>`;
-          span.querySelector('.tma-inner').style.transitionDelay=(i*.03)+'s';
-          frag.appendChild(span);
+      let wIdx=0;
+      words.forEach(node=>{
+        if(node.nodeType===3){
+          node.textContent.split(/(\s+)/).forEach(part=>{
+            if(/^\s+$/.test(part)||!part) {
+              frag.appendChild(document.createTextNode(' '));
+              return;
+            }
+            const s=document.createElement('span');
+            s.className='kinetic-word';
+            s.textContent=part;
+            s.style.transitionDelay=(pi*200+wIdx*55)+'ms';
+            wIdx++;
+            frag.appendChild(s);
+            frag.appendChild(document.createTextNode(' '));
+          });
+        } else if(node.nodeType===1){
+          const clone=node.cloneNode(true);
+          frag.appendChild(clone);
         }
       });
-      node.parentNode.replaceChild(frag,node);
-    } else if(node.nodeType===1&&node.tagName!=='SCRIPT'){
-      [...node.childNodes].forEach(wrapWords);
+      p.innerHTML='';
+      p.appendChild(frag);
+    });
+    setTimeout(()=>e.target.querySelectorAll('.kinetic-word').forEach(w=>w.classList.add('revealed')),50);
+    aboutIO.unobserve(e.target);
+  });
+},{threshold:.2});
+const aboutTextEl=document.querySelector('.about-text');
+if(aboutTextEl) aboutIO.observe(aboutTextEl);
+
+/* ── CONTACT HEADING — word stamp ── */
+const contactIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const big = document.querySelector('.contact-big');
+    if(!big) return;
+    // split into span-wrapped words preserving <br> and .accent-word
+    const rawHTML = big.innerHTML;
+    const temp2=document.createElement('div');
+    temp2.innerHTML=rawHTML;
+    big.innerHTML='';
+    let wDelay=0;
+    function stampNode(node,target){
+      if(node.nodeType===3){
+        node.textContent.split(/(\s+)/).forEach(part=>{
+          if(!part.trim()){target.appendChild(document.createTextNode(' '));return;}
+          const s=document.createElement('span');
+          s.className='stamp-word';
+          s.textContent=part;
+          s.style.animationDelay=(wDelay)+'ms';
+          wDelay+=110;
+          target.appendChild(s);
+          target.appendChild(document.createTextNode(' '));
+        });
+      } else if(node.nodeType===1){
+        if(node.tagName==='BR'){target.appendChild(document.createElement('br'));return;}
+        const clone=document.createElement(node.tagName);
+        node.getAttributeNames().forEach(a=>clone.setAttribute(a,node.getAttribute(a)));
+        node.childNodes.forEach(c=>stampNode(c,clone));
+        target.appendChild(clone);
+      }
     }
-  }
-  // Only wrap the non-strong text nodes to keep structure
-  // Actually easier: just delay reveal of the whole sub
-  sub.style.opacity='0';
-  sub.style.transform='translateY(24px)';
-  sub.style.transition='opacity .9s cubic-bezier(0.16,1,0.3,1) .7s, transform .9s cubic-bezier(0.16,1,0.3,1) .7s';
-  setTimeout(()=>{sub.style.opacity='1';sub.style.transform='none';},40);
-})();
+    temp2.childNodes.forEach(n=>stampNode(n,big));
+    setTimeout(()=>big.querySelectorAll('.stamp-word').forEach(w=>w.classList.add('revealed')),80);
+    contactIO.unobserve(e.target);
+  });
+},{threshold:.3});
+const contactBig=document.querySelector('.contact-big');
+if(contactBig) contactIO.observe(contactBig);
+
+/* ── PROJECT TITLES — split char on scroll ── */
+const ptitleIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.querySelectorAll('.ptitle').forEach((el,i)=>{
+      if(el.dataset.animated) return;
+      el.dataset.animated='1';
+      const txt=el.textContent;
+      el.innerHTML='';
+      let delay=i*80;
+      [...txt].forEach((ch,ci)=>{
+        const s=document.createElement('span');
+        s.className='letter-float-char'+(ch===' '?' space':'');
+        s.textContent=ch===' '?'\u00a0':ch;
+        s.style.animationDelay=(delay+ci*45)+'ms';
+        el.appendChild(s);
+      });
+      setTimeout(()=>el.querySelectorAll('.letter-float-char').forEach(c=>c.classList.add('revealed')),50);
+    });
+    ptitleIO.unobserve(e.target);
+  });
+},{threshold:.15});
+document.querySelectorAll('.split-card').forEach(el=>ptitleIO.observe(el));
+
+/* ── STEP HEADINGS — scramble ── */
+const stepIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const h3=e.target.querySelector('h3');
+    if(h3&&!h3.dataset.scrambled){
+      h3.dataset.scrambled='1';
+      const txt=h3.textContent;
+      const delay=parseInt(e.target.style.transitionDelay||0)*1000||0;
+      scrambleText(h3, txt, 700, 150+delay);
+    }
+    stepIO.unobserve(e.target);
+  });
+},{threshold:.4});
+document.querySelectorAll('.step').forEach(el=>stepIO.observe(el));
+
+/* ── GLITCH on sec-rule intersection ── */
+const glitchIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const sib = e.target.nextElementSibling;
+    if(sib&&sib.classList.contains('sec-title')){
+      setTimeout(()=>sib.querySelectorAll('.tma-linner').forEach(ln=>{
+        setupGlitch(ln);
+        setTimeout(()=>triggerGlitch(ln),400);
+      }),200);
+    }
+    glitchIO.unobserve(e.target);
+  });
+},{threshold:1});
+document.querySelectorAll('.sec-rule').forEach(el=>glitchIO.observe(el));
+
+/* ── HIGHLIGHT SWEEP on about strong tags ── */
+const strongIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.querySelectorAll('strong').forEach((s,i)=>{
+      setTimeout(()=>s.classList.add('highlight-sweep','revealed'),i*120);
+    });
+    strongIO.unobserve(e.target);
+  });
+},{threshold:.4});
+const aboutSection=document.querySelector('#about');
+if(aboutSection) strongIO.observe(aboutSection);
+
+/* ── FOOTER LOGO — scramble on hover ── */
+const footerLogo=document.querySelector('.footer-logo');
+if(footerLogo){
+  const txt=footerLogo.textContent;
+  footerLogo.addEventListener('mouseenter',()=>scrambleText(footerLogo,txt,500,0));
+  magneticHover(footerLogo,0.3);
+}
+
+/* ── NAV LINKS — scramble on hover (targets face span) ── */
+document.querySelectorAll('.nav-links a').forEach(a=>{
+  const face = a.querySelector('.nl-face');
+  const back = a.querySelector('.nl-back');
+  if(!face) return;
+  const origFace = face.textContent.trim();
+  const origBack = back ? back.textContent.trim() : origFace;
+  a.addEventListener('mouseenter',()=>{
+    // scramble the back label
+    if(back) scrambleText(back, origBack, 350, 0);
+  });
+});
 
 /* ══════════════════════════════════════════
    GENERIC REVEAL OBSERVER
@@ -1174,21 +1794,7 @@ const rIO=new IntersectionObserver(entries=>{
 document.querySelectorAll('.reveal,.slide-l,.slide-r,.scale-in,.sec-rule').forEach(el=>rIO.observe(el));
 
 /* ══════════════════════════════════════════
-   HERO ENTRANCE
-══════════════════════════════════════════ */
-const hp=document.querySelector('.hero-photo-frame');
-if(hp){
-  hp.style.cssText+='opacity:0;transform:translateX(40px);transition:opacity 1.1s cubic-bezier(0.16,1,0.3,1) .3s,transform 1.1s cubic-bezier(0.16,1,0.3,1) .3s;';
-  setTimeout(()=>{hp.style.opacity='.92';hp.style.transform='none';},60);
-}
-['.hero-cta'].forEach((sel,i)=>{
-  const el=document.querySelector(sel);if(!el)return;
-  el.style.cssText+='opacity:0;transform:translateY(22px);transition:opacity .9s cubic-bezier(0.16,1,0.3,1) .82s,transform .9s cubic-bezier(0.16,1,0.3,1) .82s;';
-  setTimeout(()=>{el.style.opacity='1';el.style.transform='none';},40);
-});
-
-/* ══════════════════════════════════════════
-   PARALLAX — hero shapes follow mouse
+   PARALLAX — hero shapes
 ══════════════════════════════════════════ */
 document.addEventListener('mousemove',e=>{
   const shapes=document.querySelectorAll('#hero .fshape');
@@ -1203,7 +1809,7 @@ const cIO=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(!e.isIntersecting)return;
     const el=e.target,tgt=+el.dataset.target,dur=1400,s=performance.now();
-    (function go(n){const t=Math.min((n-s)/dur,1),ease=1-Math.pow(1-t,3);el.textContent=Math.floor(ease*tgt);if(t<1)requestAnimationFrame(go);else el.textContent=tgt;})(s);
+    (function go(n){const t=Math.min((n-s)/dur,1),ease2=1-Math.pow(1-t,3);el.textContent=Math.floor(ease2*tgt);if(t<1)requestAnimationFrame(go);else el.textContent=tgt;})(s);
     cIO.unobserve(el);
   });
 },{threshold:.5});
@@ -1245,25 +1851,21 @@ if(tags.length)sIO.observe(tags[0].closest('.skills-wrap')||tags[0]);
 
 /* ══════════════════════════════════════════
    PROJECT CARDS — STAGGERED SCROLL REVEAL
-   Replaces broken unmask/clip-path approach
 ══════════════════════════════════════════ */
 (function initProjectReveal(){
   const cards = document.querySelectorAll('.split-card');
   if(!cards.length) return;
-
   const projIO = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if(!entry.isIntersecting) return;
       const card = entry.target;
-      // stagger based on column position (index within visible batch)
       const idx = Array.from(cards).indexOf(card);
-      const stagger = (idx % 2) * 0.12; // 0 or 120ms
+      const stagger = (idx % 2) * 0.12;
       card.style.transitionDelay = stagger + 's';
       card.classList.add('proj-visible');
       projIO.unobserve(card);
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
   cards.forEach(card => projIO.observe(card));
 })();
 
@@ -1278,6 +1880,63 @@ const snIO=new IntersectionObserver(entries=>{
   });
 },{threshold:.9});
 document.querySelectorAll('.step-num').forEach(n=>snIO.observe(n));
+
+/* ══════════════════════════════════════════
+   APPROACH PARAGRAPH — typewriter on scroll
+══════════════════════════════════════════ */
+const approachPara = document.querySelector('#approach .reveal.d2');
+if(approachPara){
+  const approachIO = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const txt = approachPara.textContent;
+      // kinetic words approach
+      if(!approachPara.dataset.animated){
+        approachPara.dataset.animated='1';
+        const words=txt.split(/\s+/);
+        approachPara.innerHTML='';
+        words.forEach((w,i)=>{
+          const isStrong = approachPara.innerHTML.includes(w);
+          const s=document.createElement('span');
+          s.className='kinetic-word';
+          s.textContent=w;
+          s.style.transitionDelay=(i*60)+'ms';
+          approachPara.appendChild(s);
+          approachPara.appendChild(document.createTextNode(' '));
+        });
+        setTimeout(()=>approachPara.querySelectorAll('.kinetic-word').forEach(w2=>w2.classList.add('revealed')),100);
+      }
+      approachIO.unobserve(e.target);
+    });
+  },{threshold:.4});
+  approachIO.observe(approachPara);
+}
+
+/* ══════════════════════════════════════════
+   RANDOM GLITCH LOOP on hero name (subtle)
+══════════════════════════════════════════ */
+(function glitchLoop(){
+  const nameSolid = document.querySelector('.hero-name .name-solid .tma-linner');
+  if(!nameSolid) return;
+  setupGlitch(nameSolid);
+  function doGlitch(){
+    triggerGlitch(nameSolid);
+    setTimeout(doGlitch, 4000 + Math.random()*6000);
+  }
+  setTimeout(doGlitch, 3000);
+})();
+
+/* ══════════════════════════════════════════
+   TICKER — speed up on scroll
+══════════════════════════════════════════ */
+const tickerTrack=document.querySelector('.ticker-track');
+if(tickerTrack){
+  window.addEventListener('scroll',()=>{
+    const speed = Math.max(8, 22 - scrollY/80);
+    tickerTrack.style.animationDuration=speed+'s';
+  },{passive:true});
+}
 </script>
+
 </body>
 </html>
