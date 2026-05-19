@@ -219,6 +219,161 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
 }
 
 /* ══════════════════════════════════
+   HAMBURGER BUTTON
+══════════════════════════════════ */
+.nav-burger{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:5px;
+  width:38px;height:38px;
+  background:none;border:none;
+  cursor:pointer;padding:0;
+  position:relative;z-index:600;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-burger span{
+  display:block;
+  width:22px;height:2px;
+  background:var(--text);
+  border-radius:2px;
+  transform-origin:center;
+  transition:transform .4s var(--ease), opacity .3s ease, width .3s ease;
+}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+@media(max-width:768px){.nav-burger{display:flex;}}
+
+/* ══════════════════════════════════
+   MOBILE DRAWER (full-screen overlay)
+══════════════════════════════════ */
+.nav-drawer{
+  position:fixed;
+  inset:0;
+  z-index:550;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:0;
+  /* Deep glass — same language as the nav pill */
+  background:rgba(8,8,10,0.92);
+  backdrop-filter:blur(40px) saturate(160%);
+  -webkit-backdrop-filter:blur(40px) saturate(160%);
+  /* Hidden state */
+  opacity:0;
+  pointer-events:none;
+  transform:scale(1.04);
+  transition:
+    opacity .42s var(--ease),
+    transform .42s var(--ease);
+}
+[data-theme="light"] .nav-drawer{
+  background:rgba(245,244,238,0.94);
+}
+.nav-drawer.open{
+  opacity:1;
+  pointer-events:all;
+  transform:scale(1);
+}
+
+/* Drawer nav items */
+.nav-drawer ul{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.2rem;
+  padding:0;
+}
+.nav-drawer ul li{
+  overflow:hidden;
+}
+.nav-drawer ul li a{
+  display:block;
+  font-family:var(--font-d);
+  font-size:clamp(2.2rem,10vw,3.5rem);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:-.02em;
+  color:var(--text);
+  text-decoration:none;
+  line-height:1;
+  padding:.25rem 1rem;
+  position:relative;
+  transition:color .25s ease;
+  /* entrance: slide up from below */
+  transform:translateY(60px);
+  opacity:0;
+  transition:transform .55s var(--ease), opacity .45s ease, color .2s;
+}
+.nav-drawer.open ul li a{
+  transform:translateY(0);
+  opacity:1;
+}
+/* stagger each link */
+.nav-drawer ul li:nth-child(1) a{transition-delay:.06s;}
+.nav-drawer ul li:nth-child(2) a{transition-delay:.12s;}
+.nav-drawer ul li:nth-child(3) a{transition-delay:.18s;}
+.nav-drawer ul li:nth-child(4) a{transition-delay:.24s;}
+.nav-drawer ul li:nth-child(5) a{transition-delay:.30s;}
+
+.nav-drawer ul li a::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:1rem;right:1rem;
+  height:2px;
+  background:var(--accent);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .35s var(--ease);
+}
+.nav-drawer ul li a:hover{color:var(--accent);}
+.nav-drawer ul li a:hover::after{transform:scaleX(1);}
+
+/* Drawer bottom actions */
+.nav-drawer-footer{
+  margin-top:2.5rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+  transform:translateY(30px);
+  opacity:0;
+  transition:transform .55s var(--ease) .36s, opacity .45s ease .36s;
+}
+.nav-drawer.open .nav-drawer-footer{
+  transform:translateY(0);
+  opacity:1;
+}
+.nav-drawer-footer a{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--accent);color:#0a0a0a;
+  padding:.75rem 2.2rem;border-radius:100px;
+  font-family:var(--font-d);font-size:.85rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.08em;
+  text-decoration:none;
+  transition:opacity .2s;
+}
+.nav-drawer-footer a:active{opacity:.8;}
+
+/* Drawer accent glow */
+.nav-drawer::before{
+  content:'';
+  position:absolute;
+  top:30%;left:50%;
+  transform:translate(-50%,-50%);
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(200,255,26,.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+[data-theme="light"] .nav-drawer::before{
+  background:radial-gradient(circle,rgba(26,107,255,.06) 0%,transparent 65%);
+}
+
+/* ══════════════════════════════════
    ROTATION BUTTON HOVER EFFECT
    (rota-buta-hova.learnframer.site)
 ══════════════════════════════════ */
@@ -910,10 +1065,159 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
 #tbtn:hover::after{opacity:1;}
 
 /* ══════════════════════════════════
-   RESPONSIVE MISC
+   APPLE-SMOOTH TRANSITIONS (global)
+══════════════════════════════════ */
+a,button{-webkit-tap-highlight-color:transparent;}
+*{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* ══════════════════════════════════
+   RESPONSIVE MISC — MOBILE FIRST
 ══════════════════════════════════ */
 @media(max-width:900px){
-  section{padding:4.5rem 1.5rem;}
+  section{padding:4rem 1.25rem;}
+  .container{padding:0;}
+
+  /* ── HERO ── */
+  #hero{
+    grid-template-columns:1fr;
+    padding:6.5rem 1.25rem 0;
+    align-items:start;
+    gap:0;
+    min-height:100svh;
+  }
+  .hero-left{padding-bottom:2rem;}
+  .hero-name{font-size:clamp(2.6rem,13vw,5rem);line-height:.88;}
+  .hero-sub{font-size:.95rem;margin-bottom:2rem;}
+  .hero-cta{
+    flex-wrap:wrap;
+    gap:.65rem;
+  }
+  .btn-rot,.btn-ghost{
+    padding:.72rem 1.5rem;
+    font-size:.8rem;
+    flex:0 0 auto;
+  }
+  .insta-badge{
+    padding:.5rem 1rem;
+    font-size:.78rem;
+  }
+  .hero-right{
+    justify-content:center;
+    align-items:center;
+    margin-top:1.5rem;
+  }
+  .hero-photo-frame{
+    width:min(320px,80vw);
+    margin:0 auto;
+  }
+  .hero-photo-frame img{
+    aspect-ratio:3/4;
+    border-radius:160px 160px 0 0;
+  }
+  .hero-photo-tag{
+    font-size:.65rem;
+    padding:.35rem .9rem;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid{grid-template-columns:1fr;gap:2rem;}
+  .about-badge{right:0;bottom:1rem;}
+  .about-photo-wrap img{height:340px;}
+
+  /* ── PROJECTS ── */
+  .projects-grid{grid-template-columns:1fr;gap:1rem;}
+  .projects-grid .split-card:first-child{grid-column:auto;}
+  .split-card:first-child .split-img-wrap{height:240px;}
+  .split-img-wrap{height:220px;}
+  .split-body{padding:1.25rem;}
+  .ptitle{font-size:1.15rem;}
+  .plinks{gap:.45rem;}
+  .plink{padding:.4rem .9rem;font-size:.72rem;}
+
+  /* ── GALLERY ── */
+  .gallery-grid{grid-template-columns:repeat(2,1fr);}
+  .gallery-grid .wide{grid-column:span 2;}
+
+  /* ── APPROACH ── */
+  .approach-grid{grid-template-columns:1fr;gap:2rem;}
+  .vid-wrap{position:static;}
+
+  /* ── CONTACT ── */
+  .contact-big{font-size:clamp(2rem,10vw,4rem);}
+  .form-row{grid-template-columns:1fr;}
+
+  /* ── FOOTER ── */
+  footer{
+    flex-direction:column;
+    text-align:center;
+    padding:2rem 1.25rem;
+    gap:1rem;
+  }
+  .footer-right{justify-content:center;}
+
+  /* ── THEME BTN ── */
+  #tbtn{bottom:1.5rem;right:1.25rem;width:44px;height:44px;}
+}
+
+@media(max-width:600px){
+  /* ── NAV ── */
+  .nav-outer{
+    top:.65rem;
+    width:calc(100% - 1.5rem);
+  }
+  .nav-inner{
+    padding:.6rem .75rem .6rem 1rem;
+  }
+
+  /* ── HERO ── */
+  #hero{padding:5.5rem 1rem 0;}
+  .hero-name{font-size:clamp(2.4rem,16vw,3.8rem);}
+  .hero-eyebrow{font-size:.68rem;}
+  .hero-sub{font-size:.88rem;line-height:1.72;}
+  .btn-rot,.btn-ghost{
+    width:100%;
+    justify-content:center;
+    padding:.82rem 1.25rem;
+    font-size:.82rem;
+  }
+  .insta-badge{
+    width:100%;
+    justify-content:center;
+    padding:.72rem 1rem;
+  }
+  .hero-cta{flex-direction:column;gap:.6rem;}
+  .hero-photo-frame{width:min(260px,75vw);}
+
+  /* ── MARQUEE ── */
+  .mq-track{font-size:.78rem;gap:1.5rem;}
+
+  /* ── ABOUT ── */
+  .skills-wrap{gap:.35rem;}
+  .skill-tag{font-size:.7rem;padding:.28rem .72rem;}
+  .social-links{gap:.5rem;}
+  .social-link{font-size:.75rem;padding:.38rem .9rem;}
+
+  /* ── PROJECTS ── */
+  .split-body{padding:1rem;}
+  .ptitle{font-size:1.05rem;}
+  .pdesc{font-size:.84rem;}
+  .plinks{margin-top:1rem;}
+
+  /* ── GALLERY ── */
+  .gallery-grid{grid-template-columns:1fr;gap:.6rem;}
+  .gallery-grid .wide{grid-column:span 1;aspect-ratio:16/9;}
+
+  /* ── CONTACT ── */
+  .contact-form{padding:0 0;}
+  .form-input,.form-textarea{padding:.75rem 1rem;font-size:.85rem;}
+  .contact-big{font-size:clamp(1.8rem,12vw,3rem);}
+
+  /* ── SEC TITLE ── */
+  .sec-title{font-size:clamp(1.8rem,8vw,2.8rem);}
+
+  /* ── TOOLS STRIP ── */
+  .tools-strip{padding:1.75rem 0;}
+  .tool-chip{font-size:.75rem;padding:.4rem 1rem;}
 }
 </style>
 </head>
@@ -948,12 +1252,30 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
       <li><a href="#design"><span class="nl-face">Design</span><span class="nl-back">Gallery</span></a></li>
       <li><a href="#contact"><span class="nl-face">Contact</span><span class="nl-back">Let's Talk</span></a></li>
     </ul>
-    <a href="https://drive.google.com/file/d/1bntx1-tUSMAnkd90xOaZ2OO_fbHJ-fcU/view?usp=drive_link" class="nav-cta" target="_blank">
+    <a href="https://drive.google.com/file/d/1CoEw7qY1ySEiUIF7Ed3zlMIRO_G2H6zt/view?usp=drive_link" class="nav-cta" target="_blank">
       <span class="rface">Download CV</span>
       <span class="rback">Get Resume ↗</span>
     </a>
+    <!-- hamburger — visible only on mobile -->
+    <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </div>
+
+<!-- ════ MOBILE DRAWER ════ -->
+<nav class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <ul>
+    <li><a href="#about"   data-drawer-link>About</a></li>
+    <li><a href="#projects" data-drawer-link>Projects</a></li>
+    <li><a href="#approach" data-drawer-link>Approach</a></li>
+    <li><a href="#design"   data-drawer-link>Design</a></li>
+    <li><a href="#contact"  data-drawer-link>Contact</a></li>
+  </ul>
+  <div class="nav-drawer-footer">
+    <a href="https://drive.google.com/file/d/1CoEw7qY1ySEiUIF7Ed3zlMIRO_G2H6zt/view?usp=drive_link" target="_blank">Download CV ↗</a>
+  </div>
+</nav>
 
 <!-- ════ HERO ════ -->
 <section id="hero">
@@ -1276,7 +1598,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2.5r
     <a href="#about" class="footer-link">About</a>
     <a href="#projects" class="footer-link">Projects</a>
     <a href="https://www.instagram.com/pozters.in/" class="footer-link" target="_blank">@pozters.in</a>
-    <a href="https://drive.google.com/file/d/1bntx1-tUSMAnkd90xOaZ2OO_fbHJ-fcU/view?usp=drive_link" class="footer-link" target="_blank">Resume</a>
+    <a href="https://drive.google.com/file/d/1CoEw7qY1ySEiUIF7Ed3zlMIRO_G2H6zt/view?usp=drive_link" class="footer-link" target="_blank">Resume</a>
   </div>
 </footer>
 
@@ -1292,6 +1614,51 @@ function setTheme(t){
 }
 setTheme(localStorage.getItem(SK)||'dark');
 tb.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+/* ══════════════════════════════════════════
+   HAMBURGER MENU
+══════════════════════════════════════════ */
+(function initHamburger(){
+  const burger = document.getElementById('navBurger');
+  const drawer = document.getElementById('navDrawer');
+  if(!burger || !drawer) return;
+
+  function openDrawer(){
+    burger.classList.add('open');
+    drawer.classList.add('open');
+    burger.setAttribute('aria-expanded','true');
+    drawer.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer(){
+    burger.classList.remove('open');
+    drawer.classList.remove('open');
+    burger.setAttribute('aria-expanded','false');
+    drawer.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  burger.addEventListener('click', ()=>{
+    burger.classList.contains('open') ? closeDrawer() : openDrawer();
+  });
+
+  // close on link tap
+  drawer.querySelectorAll('[data-drawer-link]').forEach(link=>{
+    link.addEventListener('click', ()=>{
+      closeDrawer();
+    });
+  });
+
+  // close on outside tap
+  drawer.addEventListener('click', e=>{
+    if(e.target === drawer) closeDrawer();
+  });
+
+  // close on Escape
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape') closeDrawer();
+  });
+})();
 
 /* ══════════════════════════════════════════
    SCROLL PROGRESS
