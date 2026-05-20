@@ -689,12 +689,12 @@ section{padding:5.5rem 3rem;}
 #hero {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: end;
-  gap: 2rem;
+  grid-template-columns: 1fr auto; 
+  align-items: end; /* Keeps the image anchored to the bottom */
+  gap: 4rem; 
   position: relative;
   overflow: hidden;
-  padding: 7rem 3rem 0;
+  padding: 6rem 5vw 0; /* Reduced from 8rem to 6rem */
 }
 /* subtle noise */
 #hero::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
@@ -722,13 +722,14 @@ section{padding:5.5rem 3rem;}
 
 .hero-name {
   font-family: var(--font-d);
-  font-size: clamp(2rem, 4.2vw, 5.5rem); 
+  font-size: clamp(3.5rem, 7vw, 8.5rem); /* Allows the text to get massive */
   font-weight: 800;
-  line-height: .9;
+  line-height: .88;
   text-transform: uppercase;
-  letter-spacing: -.04em; 
+  letter-spacing: -.03em;
   margin-bottom: 1.8rem;
   color: var(--text);
+  white-space: nowrap; /* This completely prevents 'Tejeswara' from splitting in half */
 }
 /* "Naidu" outline — ALWAYS visible in both modes */
 .hero-name .name-outline{
@@ -759,18 +760,37 @@ section{padding:5.5rem 3rem;}
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-end; 
+  align-items: flex-end; /* Anchors the image to the far right */
   min-height: 0;
-  overflow: visible; 
+  overflow: visible;
 }
 
 .hero-photo-frame {
   position: relative;
-  width: 440px; 
+  width: 520px; /* Larger image size to fill the empty space */
   max-width: 100%;
   flex-shrink: 0;
 }
-
+section {
+  /* Matches the fluid 5vw edges from your Hero section */
+  padding: 7rem 5vw; 
+}
+.about-photo-wrap img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  /* CHANGED: This controls the framing. 'bottom' or 'center' works better here */
+  object-position: 50% 10%;
+  border-radius: 18px;
+  filter: grayscale(8%) contrast(1.06);
+  border: 1px solid var(--border);
+  transition: transform .6s ease;
+}
+.container {
+  /* Vastly expanded from 1200px to fill ultra-wide screens */
+  max-width: 1850px; 
+  margin: 0 auto;
+}
 .hero-photo-frame img {
   width: 100%;
   aspect-ratio: 9 / 16; 
@@ -782,7 +802,13 @@ section{padding:5.5rem 3rem;}
   border-bottom: none;
   display: block;
 }
-
+.hero-left {
+  position: relative;
+  z-index: 1;
+  align-self: center; /* This pulls the text UP into the middle of the screen */
+  padding-bottom: 2rem; /* Reduced from 5rem to balance it perfectly */
+  min-width: 0; 
+}
 .hero-photo-tag {
   position: absolute;
   top: 4rem;
@@ -831,8 +857,40 @@ section{padding:5.5rem 3rem;}
 #about{background:var(--surface);position:relative;overflow:hidden;}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
 .about-photo-wrap{position:relative;}
-.about-photo-wrap img{width:100%;height:500px;object-fit:cover;object-position:top;border-radius:18px;filter:grayscale(8%) contrast(1.06);border:1px solid var(--border);transition:transform .6s ease;}
+.about-photo-wrap img{width:100%;height:500px;object-fit:cover;object-position:bottom;border-radius:18px;filter:grayscale(8%) contrast(1.06);border:1px solid var(--border);transition:transform .6s ease;}
 .about-photo-wrap:hover img{transform:scale(1.02);}
+.about-photo-wrap {
+  position: relative;
+  margin: 0; /* Removes the auto-margin that was pushing it to the center */
+  width: 40vw; /* Scales smoothly with the screen width */
+  max-width: 550px; /* Caps the size so it doesn't get comically huge */
+  flex-shrink: 0;
+}
+.about-grid {
+  display: grid;
+  /* Image column hugs the photo, text column takes all remaining space */
+  grid-template-columns: auto 1fr; 
+  gap: 6vw; /* Fluid gap that breathes beautifully on wide screens */
+  align-items: center;
+}
+.about-text {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.88;
+  font-weight: 300;
+  max-width: 800px; /* Stops the text from stretching too wide on giant monitors */
+}
+.about-photo-wrap img {
+  width: 100%;
+  height: auto; 
+  aspect-ratio: 1 / 1; /* Locks it into a perfect square on all screens */
+  object-fit: cover;
+  object-position: center; /* Keeps your face exactly in the middle of the crop */
+  border-radius: 18px;
+  filter: grayscale(8%) contrast(1.06);
+  border: 1px solid var(--border);
+  transition: transform .6s ease;
+}
 .about-badge{position:absolute;bottom:2rem;right:-1.5rem;background:var(--accent);color:#0a0a0a;font-family:var(--font-d);font-weight:800;padding:1.5rem;border-radius:16px;text-align:center;min-width:115px;}
 [data-theme="light"] .about-badge{color:#fff;}
 .about-badge .num{font-size:2.3rem;line-height:1;}
@@ -1288,7 +1346,7 @@ a,button{-webkit-tap-highlight-color:transparent;}
 
   <div class="hero-left">
     <p class="hero-eyebrow tma-block">
-      <span class="tma-line"><span class="tma-linner">Available for work · India</span></span>
+      <span class="tma-line"><span class="tma-linner">Not a AI - HUMAN</span></span>
     </p>
 
     <h1 class="hero-name">
