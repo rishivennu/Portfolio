@@ -1369,8 +1369,13 @@ a,button{-webkit-tap-highlight-color:transparent;}
   .vid-wrap { position: static !important; }
 
   /* ── CONTACT ── */
-  .contact-big { font-size: clamp(2rem, 11vw, 3.5rem) !important; }
-  .form-row { grid-template-columns: 1fr !important; }
+  /* Contact Fixes */
+  .contact-big {
+    font-size: clamp(1.6rem, 9vw, 2.5rem) !important;
+    line-height: 1.1 !important;
+    overflow-wrap: break-word !important;
+    word-wrap: break-word !important;
+  }
 
   /* ── FOOTER ── */
   footer { flex-direction: column !important; text-align: center !important; padding: 2rem 1.25rem !important; gap: 1rem !important; }
@@ -1460,7 +1465,7 @@ a,button{-webkit-tap-highlight-color:transparent;}
 
   <div class="hero-left">
     <p class="hero-eyebrow tma-block">
-      <span class="tma-line"><span class="tma-linner">Available for work · India</span></span>
+      <span class="tma-line"><span class="tma-linner">Powered by Heart, Not Machine</span></span>
     </p>
 
     <h1 class="hero-name">
