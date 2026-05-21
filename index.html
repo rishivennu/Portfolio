@@ -2045,12 +2045,12 @@ a,button{-webkit-tap-highlight-color:transparent;}
 const html=document.documentElement,tb=document.getElementById('tbtn'),SK='tn4';
 function setTheme(t){
   html.setAttribute('data-theme',t);
-  tb.dataset.tip=t==='dark'?'Light mode':'Dark mode';
+  tb.dataset.tip=t==='light'?'Dark mode':'Light mode';
   localStorage.setItem(SK,t);
 }
 // CHANGE 'dark' TO 'light' HERE:
 setTheme(localStorage.getItem(SK)||'light'); 
-tb.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
+tb.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='light'?'dark':'light'));
 
 /* ══════════════════════════════════════════
    HAMBURGER MENU
