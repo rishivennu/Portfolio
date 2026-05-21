@@ -76,12 +76,109 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
 @media(max-width:600px){.cur,.cur-r{display:none;}}
 
 /* ══════════════════════════════════
+   NAV — hidden until intro dismisses
+══════════════════════════════════ */
+.nav-outer {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-14px);
+}
+.nav-outer.nav-visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ══════════════════════════════════
+   NAIDU INTRO OVERLAY
+══════════════════════════════════ */
+#naidu-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  cursor: none;
+  /* dismissal transition */
+  transition: transform .9s cubic-bezier(0.76,0,0.24,1),
+              opacity .5s ease .4s;
+  transform-origin: top center;
+}
+#naidu-intro.dismissed {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+/* The giant NAIDU word */
+.intro-word {
+  font-family: var(--font-d);
+  font-size: clamp(14vw, 18vw, 22vw);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1;
+  user-select: none;
+  /* each letter animates in on load */
+}
+.intro-word .ic {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) scale(.9);
+  animation: introChar .7s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.intro-word .ic:nth-child(1) { animation-delay: .05s; }
+.intro-word .ic:nth-child(2) { animation-delay: .12s; }
+.intro-word .ic:nth-child(3) { animation-delay: .19s; }
+.intro-word .ic:nth-child(4) { animation-delay: .26s; }
+.intro-word .ic:nth-child(5) { animation-delay: .33s; }
+@keyframes introChar {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* scroll hint */
+.intro-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-b);
+  font-size: .78rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  animation: fadeUp .6s ease .9s forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+/* accent line under NAIDU */
+.intro-line {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px;
+  animation: lineGrow .6s cubic-bezier(0.16,1,0.3,1) .7s forwards;
+}
+@keyframes lineGrow { to { width: 100%; } }
+.intro-word-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* ══════════════════════════════════
    NAV — LIQUID GLASS PILL (Apple style)
 ══════════════════════════════════ */
 .nav-outer{
-  position:fixed;top:1.1rem;left:50%;transform:translateX(-50%);
+  position:fixed;top:1.1rem;left:50%;
   z-index:500;width:calc(100% - 3rem);max-width:1160px;
-  transition:top .35s var(--ease);
+  transition:top .35s var(--ease), opacity .55s cubic-bezier(0.16,1,0.3,1), transform .55s cubic-bezier(0.16,1,0.3,1);
 }
 .nav-inner{
   display:flex;align-items:center;justify-content:space-between;
@@ -113,6 +210,7 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
     inset 0 1px 0 rgba(255,255,255,0.70),
     inset 0 -1px 0 rgba(0,0,0,0.04);
 }
+/* ── NAV LOGO ── */
 .nav-logo {
   display: inline-flex !important;
   align-items: center !important;
@@ -126,17 +224,13 @@ body:has(a:hover) .cur-r,.cur-r.big{width:54px;height:54px;opacity:.22;}
   font-weight: 800;
   color: #0a0a0a !important;
   text-decoration: none;
-  letter-spacing: 0;
   flex-shrink: 0;
   box-shadow: 0 2px 10px rgba(0,0,0,.25);
   line-height: normal !important;
   padding: 0 !important;
   margin: 0 !important;
 }
-.nav-logo:hover {
-  transform: scale(1.1);
-}
-.nav-logo:hover{transform:scale(1.1);}
+.nav-logo:hover { transform: scale(1.1); }
 .nav-links{display:flex;gap:.25rem;list-style:none;}
 .nav-links a{
   color:rgba(255,255,255,.82);
@@ -822,18 +916,42 @@ section {
   letter-spacing: .1em;
   padding: .6rem 1.4rem;
   border-radius: 100px;
-  transform: rotate(-3deg); 
+  transform: rotate(-3deg);
   z-index: 3;
   box-shadow: 0 4px 14px rgba(0,0,0,.22);
+  overflow: hidden;
 }
-[data-theme="light"] .hero-photo-tag {
-  color: #fff;
+[data-theme="light"] .hero-photo-tag { color: #fff; }
+/* shimmer sweep — both modes */
+.hero-photo-tag::after {
+  content: '';
+  position: absolute;
+  top: -60%; left: -75%;
+  width: 45%; height: 220%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: skewX(-18deg);
+  animation: tagShimmer 3s ease-in-out infinite 2s;
+}
+@keyframes tagShimmer {
+  0%   { left: -75%; opacity: 1; }
+  50%  { left: 130%; opacity: 1; }
+  51%  { opacity: 0; }
+  100% { left: 130%; opacity: 0; }
 }
 
 /* ticker */
 .ticker-wrap{position:absolute;bottom:0;left:0;right:0;border-top:1px solid var(--border);background:var(--glass);backdrop-filter:blur(12px);padding:.75rem 0;overflow:hidden;z-index:1;}
-.ticker-track{display:flex;gap:2.5rem;white-space:nowrap;animation:tRun 22s linear infinite;font-family:var(--font-d);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);}
-.ticker-track em{color:var(--accent);font-style:normal;}
+.ticker-track{
+  display:flex;gap:2.5rem;white-space:nowrap;
+  animation:tRun 22s linear infinite;
+  font-family:var(--font-d);font-size:.7rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.18em;color:var(--muted);
+  will-change:transform;
+  /* skew lives on the track itself, driven by JS */
+  transform-origin: center center;
+  transition: transform 0.1s linear;
+}
+.ticker-track em{color:var(--accent);font-style:normal;display:inline-block;transition:transform .12s ease;}
 @keyframes tRun{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 @media(max-width:900px){
@@ -1418,10 +1536,21 @@ a,button{-webkit-tap-highlight-color:transparent;}
 <div class="cur" id="cur"></div>
 <div class="cur-r" id="curR"></div>
 
+<!-- ════ NAIDU INTRO OVERLAY ════ -->
+<div id="naidu-intro" aria-hidden="true">
+  <div class="intro-word-wrap">
+    <div class="intro-word">
+      <span class="ic">N</span><span class="ic">A</span><span class="ic">I</span><span class="ic">D</span><span class="ic">U</span>
+    </div>
+    <div class="intro-line"></div>
+  </div>
+  <p class="intro-hint">Scroll to enter ↓</p>
+</div>
+
 <!-- ════ NAV — PILL STYLE ════ -->
 <div class="nav-outer">
   <div class="nav-inner">
-    <a href="#hero" class="nav-logo">N</a>
+    <a href="#hero" class="nav-logo" id="navLogo">N</a>
     <ul class="nav-links">
       <li><a href="#about"><span class="nl-face">About</span><span class="nl-back">About</span></a></li>
       <li><a href="#projects"><span class="nl-face">Projects</span><span class="nl-back">Work</span></a></li>
@@ -2476,15 +2605,100 @@ if(approachPara){
 })();
 
 /* ══════════════════════════════════════════
-   TICKER — speed up on scroll
+   TICKER — velocity skew (ticker-scroll.learnframer.site style)
 ══════════════════════════════════════════ */
-const tickerTrack=document.querySelector('.ticker-track');
-if(tickerTrack){
-  window.addEventListener('scroll',()=>{
-    const speed = Math.max(8, 22 - scrollY/80);
-    tickerTrack.style.animationDuration=speed+'s';
-  },{passive:true});
-}
+(function initTickerScroll(){
+  const track = document.querySelector('.ticker-track');
+  if(!track) return;
+
+  let lastY = window.scrollY;
+  let currentSkew = 0;
+  let targetSkew = 0;
+  let currentSpeed = 22;
+  let targetSpeed = 22;
+  let rafId;
+
+  function lerp(a, b, t){ return a + (b - a) * t; }
+
+  function tick(){
+    const nowY = window.scrollY;
+    const delta = nowY - lastY;
+    lastY = nowY;
+
+    // Speed: faster scroll = faster ticker
+    targetSpeed = Math.max(6, 22 - Math.abs(delta) * 0.6);
+    currentSpeed = lerp(currentSpeed, targetSpeed, 0.08);
+    track.style.animationDuration = currentSpeed.toFixed(2) + 's';
+
+    // Skew: scroll direction determines tilt angle
+    targetSkew = Math.max(-14, Math.min(14, delta * 1.8));
+    currentSkew = lerp(currentSkew, targetSkew, 0.1);
+
+    // Apply skew only (translateX is handled by CSS animation)
+    track.style.transform = `skewX(${currentSkew.toFixed(2)}deg) translateX(0)`;
+    // Override animation translateX with skew transform via matrix is tricky;
+    // instead apply skew on the inner items
+    track.querySelectorAll('em').forEach(em => {
+      em.style.transform = `skewX(${(-currentSkew * 0.5).toFixed(2)}deg)`;
+    });
+
+    rafId = requestAnimationFrame(tick);
+  }
+
+  tick();
+})();
+
+/* ══════════════════════════════════════════
+   NAIDU INTRO OVERLAY — dismiss on first scroll or touch
+   (nav-anim.learnframer.site style)
+══════════════════════════════════════════ */
+(function initNaiduIntro(){
+  const intro = document.getElementById('naidu-intro');
+  const nav   = document.querySelector('.nav-outer');
+  if(!intro || !nav) return;
+
+  // Lock scroll while intro is up
+  document.body.style.overflow = 'hidden';
+
+  let dismissed = false;
+
+  function dismiss(){
+    if(dismissed) return;
+    dismissed = true;
+
+    // Slide intro up and out
+    intro.classList.add('dismissed');
+
+    // Reveal nav pill
+    setTimeout(() => {
+      nav.classList.add('nav-visible');
+    }, 220);
+
+    // Restore scroll
+    setTimeout(() => {
+      document.body.style.overflow = '';
+      intro.style.pointerEvents = 'none';
+    }, 500);
+
+    // Clean up listeners
+    window.removeEventListener('wheel',    onWheel,   { passive: false });
+    window.removeEventListener('touchmove',onTouch,   { passive: false });
+    window.removeEventListener('keydown',  onKey);
+  }
+
+  function onWheel(e){  e.preventDefault(); dismiss(); }
+  function onTouch(e){ dismiss(); }
+  function onKey(e){
+    if(['ArrowDown','PageDown','Space','Enter',' '].includes(e.key)) dismiss();
+  }
+
+  // Give letters time to animate in before listening
+  setTimeout(() => {
+    window.addEventListener('wheel',     onWheel, { passive: false });
+    window.addEventListener('touchmove', onTouch, { passive: false });
+    window.addEventListener('keydown',   onKey);
+  }, 600);
+})();
 </script>
 
 </body>
