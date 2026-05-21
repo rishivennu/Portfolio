@@ -2040,18 +2040,17 @@ a,button{-webkit-tap-highlight-color:transparent;}
    THEME — DARK DEFAULT
 ══════════════════════════════════════════ */
 /* ══════════════════════════════════════════
-   THEME — LIGHT DEFAULT (Updated)
+   THEME — DARK DEFAULT (Updated)
 ══════════════════════════════════════════ */
 const html=document.documentElement,tb=document.getElementById('tbtn'),SK='tn4';
 function setTheme(t){
   html.setAttribute('data-theme',t);
-  tb.dataset.tip=t==='light'?'Dark mode':'Light mode';
+  tb.dataset.tip=t==='dark'?'Light mode':'Dark mode';
   localStorage.setItem(SK,t);
 }
-// CHANGE 'dark' TO 'light' HERE:
-setTheme(localStorage.getItem(SK)||'light'); 
-tb.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='light'?'dark':'light'));
-
+// CHANGED 'light' TO 'dark' HERE:
+setTheme(localStorage.getItem(SK)||'dark'); 
+tb.addEventListener('click',()=>setTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
 /* ══════════════════════════════════════════
    HAMBURGER MENU
 ══════════════════════════════════════════ */
